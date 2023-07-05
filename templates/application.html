@@ -5,6 +5,94 @@
     <title>Distribution</title>
 </head>
 <body>
-    <h1>Здесь будет само приложение</h1>
+    <h1>Расчет распределения конкурсной массы</h1>
+
+    <p>Конкурсная масса: <input type="text" name="cash" /></p>
+<!--    <p>Количество кредиторов: <input type="text" name="creditors-amount" /></p>    !-->
+<!--    <p>Сохранить результат <input type="checkbox" name="save" /></p>    !-->
+
+    <button id="to-creditors-button" type="submit">Добавить кредитора</button>
+
+    <div id="creditors">
+
+    </div>
+
+    <div id="result">
+
+    </div>
+
 </body>
+<script>
+    let cash = document.getElementsByName('cash');
+
+    function validateForm() {
+        if (cash.value < 0) {
+            alert('Конкурсная масса не может быть отрицательной');
+            return false;
+        }
+        return true;
+    }
+
+    let creditors_amount = 0;
+
+    document.getElementById('to-creditors-button').addEventListener('click', function(e) {
+        if (!validateForm()) {
+            e.preventDefault();
+        }
+
+        let creditors = document.getElementById('creditors');
+
+        if (creditors_amount === 0) {
+            creditors.innerHTML = '<h2>Кредиторы</h2>';
+            let calculate_button = document.createElement('button');
+            calculate_button.type = 'submit';
+            calculate_button.innerHTML = 'Рассчитать';
+            creditors.appendChild(calculate_button);
+
+            calculate_button.addEventListener('click', function(e) {
+                e.preventDefault();
+                let creditors = document.getElementById('creditors');
+                let creditors_inputs = creditors.getElementsByTagName('input');
+                let creditors_array = [];
+                for (let i = 0; i < creditors_inputs.length; i++) {
+                    creditors_array.push(creditors_inputs[i].value);
+                }
+                console.log(creditors_array);
+
+                let result = document.getElementById('result');
+                result.innerHTML = '<h2>Результат</h2>';
+                let result_table = document.createElement('table');
+                result_table.innerHTML = '<tr><th>Кредитор</th><th>Сумма</th><th>Процент или плата</th><th>Значение</th><th>Распределение</th></tr>';
+                for (let i = 0; i < creditors_array.length; i += 3) {
+                    let row = document.createElement('tr');
+                    row.innerHTML = '<td>' + (i / 3 + 1) + '</td><td>' + creditors_array[i] + '</td><td>' + creditors_array[i + 1] + '</td><td>' + creditors_array[i + 2] + '</td><td>' + (creditors_array[i] * creditors_array[i + 2] / 100) + '</td>';
+                    result_table.appendChild(row);
+                }
+                result.appendChild(result_table);
+
+                let total = 0;
+                for (let i = 0; i < creditors_array.length; i += 3) {
+                    total += creditors_array[i] * creditors_array[i + 2] / 100;
+                }
+                result.innerHTML += '<p>Итого: ' + total + '</p>';
+            });
+        }
+
+        creditors_amount++;
+
+        let creditor = document.createElement('div');
+        creditor.id = 'creditor-' + creditors_amount;
+
+        let percent_or_fee = document.createElement('select');
+        percent_or_fee.name = 'percent-or-fee';
+        percent_or_fee.innerHTML = '<option value="percent">Процент</option>' +
+            '<option value="fee">Плата</option>';
+
+        creditor.innerHTML = '<p>Кредитор ' + creditors_amount + '</p>' +
+            '<p>Сумма: <input type="text" name="creditor-' + creditors_amount + '-cash" /></p>' +
+            '<p>Процент или плата: </p>' + percent_or_fee.outerHTML + '<p> Значение: <input type="number" name="creditor-' + creditors_amount + '-value" /></p>';
+        creditors.appendChild(creditor);
+    });
+
+</script>
 </html>
