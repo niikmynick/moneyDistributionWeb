@@ -1,4 +1,6 @@
+from django.http import JsonResponse
 from django.shortcuts import render
+from django.template import Template, Context
 
 
 def index(request):
@@ -15,3 +17,12 @@ def account(request):
 
 def application(request):
     return render(request, '../templates/application.html', {})
+
+
+    return form_html(creditors, ratio, creditors_get, bank_payments, total_fees)
+
+
+def application_result(request):
+    if request.method == 'POST':
+        response = {'html': html_result(request)}
+        return JsonResponse(response)

@@ -66,7 +66,7 @@
                 Добавить кредитора
             </button>
 
-            <button id="calculate">
+            <button id="calculate" >
                 Расчитать
             </button>
 
@@ -78,137 +78,268 @@
     </div>
 
 
-    <div class="back-placeholder" id="creditors-info"></div>
+    <div class="back-placeholder" id="creditors-info" style="visibility: hidden"></div>
 
 
-    <div class="back-placeholder" id="result-info"></div>
+    <div class="back-placeholder" id="result-info" style="visibility: hidden"></div>
 
     <script>
-        let creditors_info = [];
+  let creditors_info = [];
 
-        document.getElementById('add-creditor').addEventListener('click', function () {
-            let creditor_frame = document.createElement('div');
-            creditor_frame.className = 'front-placeholder';
-            creditor_frame.id = 'creditor-frame-' + creditors_info.length;
+  let creditors_div = document.getElementById('creditors-info');
+  let result_div = document.getElementById('result-info');
 
+  document.getElementById('add-creditor').addEventListener('click', function () {
+    creditors_div.style.visibility = 'visible';
 
-            let name = document.createElement('input');
-            name.type = 'text';
-            name.placeholder = 'Имя кредитора';
-            name.id = 'creditor-name-' + creditors_info.length;
+    let creditor_frame = document.createElement('div');
+    creditor_frame.className = 'front-placeholder';
+    creditor_frame.id = 'creditor-frame-' + creditors_info.length;
 
-            let name_label = document.createElement('label');
-            name_label.htmlFor = 'creditor-name-' + creditors_info.length;
-            name_label.innerText = 'Имя кредитора';
+    let name = document.createElement('input');
+    name.type = 'text';
+    name.placeholder = 'Имя кредитора';
+    name.id = 'creditor-name-' + creditors_info.length;
 
+    let name_label = document.createElement('label');
+    name_label.htmlFor = 'creditor-name-' + creditors_info.length;
+    name_label.innerText = 'Имя кредитора';
 
-            let value = document.createElement('input');
-            value.type = 'number';
-            value.placeholder = 'Сумма долга';
-            value.id = 'creditor-value-' + creditors_info.length;
+    let value = document.createElement('input');
+    value.type = 'number';
+    value.placeholder = 'Сумма долга';
+    value.id = 'creditor-value-' + creditors_info.length;
 
-            let value_label = document.createElement('label');
-            value_label.htmlFor = 'creditor-value-' + creditors_info.length;
-            value_label.innerText = 'Сумма долга';
+    let value_label = document.createElement('label');
+    value_label.htmlFor = 'creditor-value-' + creditors_info.length;
+    value_label.innerText = 'Сумма долга';
 
+    let is_percent = document.createElement('input');
+    is_percent.type = 'checkbox';
+    is_percent.id = 'is-percent-' + creditors_info.length;
+    is_percent.checked = false;
 
-            let is_percent = document.createElement('input');
-            is_percent.type = 'checkbox';
-            is_percent.id = 'is-percent-' + creditors_info.length;
-            is_percent.checked = false;
+    let is_percent_label = document.createElement('label');
+    is_percent_label.htmlFor = 'is-percent-' + creditors_info.length;
+    is_percent_label.innerText = 'Является ли комиссия процентами?';
 
-            let is_percent_label = document.createElement('label');
-            is_percent_label.htmlFor = 'is-percent-' + creditors_info.length;
-            is_percent_label.innerText = 'Является ли комиссия процентами?';
+    let percent_or_fee = document.createElement('input');
+    percent_or_fee.type = 'number';
+    percent_or_fee.placeholder = 'Процент / фиксированная плата';
+    percent_or_fee.id = 'creditor-percent-or-fee-' + creditors_info.length;
 
+    let percent_or_fee_label = document.createElement('label');
+    percent_or_fee_label.htmlFor = 'creditor-percent-or-fee-' + creditors_info.length;
+    percent_or_fee_label.innerText = 'Комиссия';
 
-            let percent_or_fee = document.createElement('input');
-            percent_or_fee.type = 'number';
-            percent_or_fee.placeholder = 'Процент / фиксированная плата';
-            percent_or_fee.id = 'creditor-percent-or-fee' + creditors_info.length;
+    let delete_creditor = document.createElement('button');
+    delete_creditor.innerText = 'Удалить кредитора';
 
-            let percent_or_fee_label = document.createElement('label');
-            percent_or_fee_label.htmlFor = 'creditor-percent-or-fee' + creditors_info.length;
-            percent_or_fee_label.innerText = 'Комиссия';
+    delete_creditor.addEventListener('click', function () {
+      creditors_info.forEach(function (item, index) {
+        if (item.id === creditor_frame.id) {
+          creditors_info.splice(index, 1);
+        }
+      });
 
-            let delete_creditor = document.createElement('button');
-            delete_creditor.innerText = 'Удалить кредитора';
+      creditor_frame.parentNode.removeChild(creditor_frame);
+    });
 
-            delete_creditor.addEventListener('click', function () {
-                creditors_info.forEach(function (item, index) {
-                    if (item.id === creditor_frame.id) {
-                        creditors_info.splice(index, 1);
-                    }
-                });
+    let name_field = document.createElement('div');
+    name_field.className = 'field-div';
+    name_field.appendChild(name_label);
+    name_field.appendChild(name);
 
-                creditor_frame.remove();
-            });
+    let value_field = document.createElement('div');
+    value_field.className = 'field-div';
+    value_field.appendChild(value_label);
+    value_field.appendChild(value);
 
+    let is_percent_field = document.createElement('div');
+    is_percent_field.className = 'field-div';
+    is_percent_field.appendChild(is_percent_label);
+    is_percent_field.appendChild(is_percent);
 
-            let name_field = document.createElement('div');
-            name_field.className = 'field-div';
-            name_field.appendChild(name_label);
-            name_field.appendChild(name);
+    let percent_or_fee_field = document.createElement('div');
+    percent_or_fee_field.className = 'field-div';
+    percent_or_fee_field.appendChild(percent_or_fee_label);
+    percent_or_fee_field.appendChild(percent_or_fee);
 
-            let value_field = document.createElement('div');
-            value_field.className = 'field-div';
-            value_field.appendChild(value_label);
-            value_field.appendChild(value);
+    let clear_field = document.createElement('div');
+    clear_field.className = 'field-div';
+    clear_field.appendChild(delete_creditor);
 
-            let is_percent_field = document.createElement('div');
-            is_percent_field.className = 'field-div';
-            is_percent_field.appendChild(is_percent_label);
-            is_percent_field.appendChild(is_percent);
+    creditor_frame.appendChild(name_field);
+    creditor_frame.appendChild(value_field);
+    creditor_frame.appendChild(is_percent_field);
+    creditor_frame.appendChild(percent_or_fee_field);
+    creditor_frame.appendChild(clear_field);
 
-            let percent_or_fee_field = document.createElement('div');
-            percent_or_fee_field.className = 'field-div';
-            percent_or_fee_field.appendChild(percent_or_fee_label);
-            percent_or_fee_field.appendChild(percent_or_fee);
+    creditors_div.appendChild(creditor_frame);
 
-            let clear_field = document.createElement('div');
-            clear_field.className = 'field-div';
-            clear_field.appendChild(delete_creditor);
+    creditors_info.push({
+      id: creditor_frame.id,
+      name: name,
+      value: value,
+      is_percent: is_percent,
+      percent_or_fee: percent_or_fee
+    });
+  });
 
+  document.getElementById('calculate').addEventListener('click', function () {
+    result_div.style.visibility = 'visible';
+    result_div.innerHTML = '';
 
-            creditor_frame.appendChild(name_field);
-            creditor_frame.appendChild(value_field);
-            creditor_frame.appendChild(is_percent_field);
-            creditor_frame.appendChild(percent_or_fee_field);
-            creditor_frame.appendChild(clear_field);
+    let cash = parseFloat(document.getElementById('cash').value);
 
-            document.getElementById('creditors-info').appendChild(creditor_frame);
+    const creditors = {};
+    const conditions = {};
+    const total_fees = {};
 
-            creditors_info.push({
-                id: creditor_frame.id,
-                name: name.id,
-                value: value.id,
-                is_percent: is_percent.id,
-                percent_or_fee: percent_or_fee.id
-            });
-        });
+    let debt = 0;
+    const ratio = {};
 
+    for (let i = 0; i < creditors_info.length; i++) {
+      const creditor = creditors_info[i];
+      const name = creditor.name.value;
+      const value = parseFloat(creditor.value.value);
+      creditors[name] = value;
+      debt += value;
 
-        document.getElementById('calculate').addEventListener('click', function () {
-            document.getElementById('result-info').innerHTML = '';
+      const isPercent = creditor.is_percent.checked;
+      const percentOrFee = parseFloat(creditor.percent_or_fee.value);
+      conditions[name] = {
+        'is_percent': isPercent,
+        'percent_or_fee': percentOrFee
+      };
 
-            let result = document.createElement('div');
-            result.className = 'front-placeholder';
-            result.id = 'result';
+      if (!isPercent) {
+        total_fees[name] = percentOrFee;
+      }
+    }
 
-            let result_label = document.createElement('h3');
-            result_label.innerText = 'Результат';
+    for (const [name, value] of Object.entries(creditors)) {
+      ratio[name] = value / debt * 100;
+    }
 
-            result.appendChild(result_label);
+    const creditors_get = {};
+    const bank_payments = {};
 
-            document.getElementById('result-info').appendChild(result);
-        });
+    let sum_fee = 0;
+    for (const [creditor, condition] of Object.entries(conditions)) {
+      if (!condition['is_percent']) {
+        sum_fee += condition['percent_or_fee'];
+      }
+    }
 
+    let sum_percent = 0;
+    for (const [creditor, condition] of Object.entries(conditions)) {
+      if (condition['is_percent']) {
+        sum_percent += ratio[creditor] / 100 * condition['percent_or_fee'];
+      }
+    }
 
-        document.getElementById('clear').addEventListener('click', function () {
-            creditors_info = [];
-            document.getElementById('creditors-info').innerHTML = '';
-            document.getElementById('result-info').innerHTML = '';
-        });
-    </script>
+    let remaining_cash = cash - sum_fee;
+
+    for (const [name, value] of Object.entries(ratio)) {
+      const temp = remaining_cash / sum_percent * value;
+      creditors_get[name] = temp;
+
+      if (conditions[name]['is_percent']) {
+        bank_payments[name] = temp + temp / 100 * conditions[name]['percent_or_fee'];
+        total_fees[name] = temp / 100 * conditions[name]['percent_or_fee'];
+      } else {
+        bank_payments[name] = temp + conditions[name]['percent_or_fee'];
+        total_fees[name] = conditions[name]['percent_or_fee'];
+      }
+    }
+
+    let result_header = document.createElement('h2');
+    result_header.innerText = 'Результаты';
+
+    let debtor_cash = document.createElement('p');
+    debtor_cash.innerText = 'Сумма средств к распределению: ' + cash.toFixed(2);
+
+    let creditors_header = document.createElement('h3');
+    creditors_header.innerText = 'Кредиторы';
+
+    let creditors_table = document.createElement('table');
+    creditors_table.className = 'result-table';
+
+    let creditors_table_header = document.createElement('tr');
+    let creditors_table_header_name = document.createElement('th');
+    creditors_table_header_name.innerText = 'Имя';
+    let creditors_table_header_value = document.createElement('th');
+    creditors_table_header_value.innerText = 'Долг';
+    let creditors_table_header_ratio = document.createElement('th');
+    creditors_table_header_ratio.innerText = 'Доля';
+    let creditors_table_header_get = document.createElement('th');
+    creditors_table_header_get.innerText = 'Размер погашения требования';
+    let creditors_table_header_bank = document.createElement('th');
+    creditors_table_header_bank.innerText= 'Сумма с учетом комиссии';
+    let creditors_table_header_fee = document.createElement('th');
+    creditors_table_header_fee.innerText = 'Размер комиссии';
+
+    creditors_table_header.appendChild(creditors_table_header_name);
+    creditors_table_header.appendChild(creditors_table_header_value);
+    creditors_table_header.appendChild(creditors_table_header_ratio);
+    creditors_table_header.appendChild(creditors_table_header_get);
+    creditors_table_header.appendChild(creditors_table_header_bank);
+    creditors_table_header.appendChild(creditors_table_header_fee);
+
+    creditors_table.appendChild(creditors_table_header);
+
+    for (const [name, value] of Object.entries(creditors)) {
+      let row = document.createElement('tr');
+
+      let name_cell = document.createElement('td');
+      name_cell.innerText = name;
+
+      let value_cell = document.createElement('td');
+      value_cell.innerText = value.toFixed(2);
+
+      let ratio_cell = document.createElement('td');
+      ratio_cell.innerText = ratio[name].toFixed(2) + '%';
+
+      let get_cell = document.createElement('td');
+      get_cell.innerText = creditors_get[name].toFixed(2);
+
+      let bank_cell = document.createElement('td');
+      bank_cell.innerText = bank_payments[name].toFixed(2);
+
+      let fee_cell = document.createElement('td');
+      fee_cell.innerText = total_fees[name].toFixed(2);
+
+      row.appendChild(name_cell);
+      row.appendChild(value_cell);
+      row.appendChild(ratio_cell);
+      row.appendChild(get_cell);
+      row.appendChild(bank_cell);
+      row.appendChild(fee_cell);
+
+      creditors_table.appendChild(row);
+    }
+
+    let result_inner_div = document.createElement('div');
+
+    result_inner_div.appendChild(result_header);
+    result_inner_div.appendChild(debtor_cash);
+    result_inner_div.appendChild(creditors_header);
+    result_inner_div.appendChild(creditors_table);
+
+    result_div.appendChild(result_inner_div);
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    creditors_info = [];
+
+    creditors_div.innerHTML = '';
+    result_div.innerHTML = '';
+
+    creditors_div.style.visibility = 'hidden';
+    result_div.style.visibility = 'hidden';
+  });
+</script>
+
 </body>
 </html>
